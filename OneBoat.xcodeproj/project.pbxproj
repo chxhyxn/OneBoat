@@ -6,6 +6,17 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B966779A2D882B600043977B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B96677992D882B600043977B /* README.md */; };
+		B966779D2D882BDD0043977B /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B966779C2D882BDD0043977B /* KakaoSDKAuth */; };
+		B966779F2D882BDD0043977B /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = B966779E2D882BDD0043977B /* KakaoSDKUser */; };
+		B96677A22D882BEB0043977B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B96677A12D882BEB0043977B /* GoogleSignIn */; };
+		B96677A42D882BEB0043977B /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B96677A32D882BEB0043977B /* GoogleSignInSwift */; };
+		B96677A72D882C3F0043977B /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = B96677A62D882C3F0043977B /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		B96677A92D882C3F0043977B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B96677A82D882C3F0043977B /* FirebaseAuth */; };
+		B96677AB2D882C3F0043977B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B96677AA2D882C3F0043977B /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B966773B2D882AA80043977B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,11 +38,25 @@
 		B966772A2D882AA70043977B /* OneBoat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneBoat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B966773A2D882AA80043977B /* OneBoatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OneBoatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B96677442D882AA80043977B /* OneBoatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OneBoatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B96677992D882B600043977B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B96677982D882B1E0043977B /* Exceptions for "OneBoat" folder in "OneBoat" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B96677292D882AA70043977B /* OneBoat */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B966772C2D882AA70043977B /* OneBoat */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B96677982D882B1E0043977B /* Exceptions for "OneBoat" folder in "OneBoat" target */,
+			);
 			path = OneBoat;
 			sourceTree = "<group>";
 		};
@@ -52,6 +77,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B966779F2D882BDD0043977B /* KakaoSDKUser in Frameworks */,
+				B96677A92D882C3F0043977B /* FirebaseAuth in Frameworks */,
+				B96677A72D882C3F0043977B /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				B966779D2D882BDD0043977B /* KakaoSDKAuth in Frameworks */,
+				B96677A22D882BEB0043977B /* GoogleSignIn in Frameworks */,
+				B96677A42D882BEB0043977B /* GoogleSignInSwift in Frameworks */,
+				B96677AB2D882C3F0043977B /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +107,7 @@
 		B96677212D882AA70043977B = {
 			isa = PBXGroup;
 			children = (
+				B96677992D882B600043977B /* README.md */,
 				B966772C2D882AA70043977B /* OneBoat */,
 				B966773D2D882AA80043977B /* OneBoatTests */,
 				B96677472D882AA80043977B /* OneBoatUITests */,
@@ -112,6 +145,13 @@
 			);
 			name = OneBoat;
 			packageProductDependencies = (
+				B966779C2D882BDD0043977B /* KakaoSDKAuth */,
+				B966779E2D882BDD0043977B /* KakaoSDKUser */,
+				B96677A12D882BEB0043977B /* GoogleSignIn */,
+				B96677A32D882BEB0043977B /* GoogleSignInSwift */,
+				B96677A62D882C3F0043977B /* FirebaseAnalyticsWithoutAdIdSupport */,
+				B96677A82D882C3F0043977B /* FirebaseAuth */,
+				B96677AA2D882C3F0043977B /* FirebaseFirestore */,
 			);
 			productName = OneBoat;
 			productReference = B966772A2D882AA70043977B /* OneBoat.app */;
@@ -195,6 +235,11 @@
 			);
 			mainGroup = B96677212D882AA70043977B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B966779B2D882BDD0043977B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				B96677A02D882BEB0043977B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				B96677A52D882C3F0043977B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B966772B2D882AA70043977B /* Products */;
 			projectDirPath = "";
@@ -212,6 +257,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B966779A2D882B600043977B /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,12 +439,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OneBoat/OneBoat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"OneBoat/Preview Content\"";
 				DEVELOPMENT_TEAM = TXFPK3WSCH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneBoat/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -422,12 +470,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OneBoat/OneBoat.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"OneBoat/Preview Content\"";
 				DEVELOPMENT_TEAM = TXFPK3WSCH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneBoat/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -558,6 +608,71 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B966779B2D882BDD0043977B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.24.0;
+			};
+		};
+		B96677A02D882BEB0043977B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		B96677A52D882C3F0043977B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B966779C2D882BDD0043977B /* KakaoSDKAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B966779B2D882BDD0043977B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKAuth;
+		};
+		B966779E2D882BDD0043977B /* KakaoSDKUser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B966779B2D882BDD0043977B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKUser;
+		};
+		B96677A12D882BEB0043977B /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B96677A02D882BEB0043977B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		B96677A32D882BEB0043977B /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B96677A02D882BEB0043977B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		B96677A62D882C3F0043977B /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B96677A52D882C3F0043977B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		B96677A82D882C3F0043977B /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B96677A52D882C3F0043977B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		B96677AA2D882C3F0043977B /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B96677A52D882C3F0043977B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B96677222D882AA70043977B /* Project object */;
 }

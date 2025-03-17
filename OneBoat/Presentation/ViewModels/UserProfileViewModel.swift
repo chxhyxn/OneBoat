@@ -96,6 +96,10 @@ class UserProfileViewModel: ObservableObject {
             }
             
             do {
+                // 로그아웃 시 항상 자동 로그인 비활성화
+                try await authUseCase.disableAutoLogin()
+                logger.info("Auto-login disabled during sign out")
+                
                 try await authUseCase.signOut()
                 await MainActor.run {
                     isLoading = false

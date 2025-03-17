@@ -37,9 +37,6 @@ class AuthRepositoryImpl: AuthRepository {
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
         
-        // Keychain에 사용자 데이터 저장
-        keychainDataSource.saveUser(userDTO)
-        
         let user = userDTO.toDomain()
         currentUser = user
         return user
@@ -52,9 +49,6 @@ class AuthRepositoryImpl: AuthRepository {
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
         
-        // Keychain에 사용자 데이터 저장
-        keychainDataSource.saveUser(userDTO)
-        
         let user = userDTO.toDomain()
         currentUser = user
         return user
@@ -66,9 +60,6 @@ class AuthRepositoryImpl: AuthRepository {
         
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
-        
-        // Keychain에 사용자 데이터 저장
-        keychainDataSource.saveUser(userDTO)
         
         let user = userDTO.toDomain()
         currentUser = user
@@ -163,6 +154,46 @@ class AuthRepositoryImpl: AuthRepository {
                     keychainDataSource.saveUser(updatedUserDTO)
                 }
             }
+        }
+    }
+    
+    // 자동 로그인을 위해 사용자 정보 저장
+    func saveUserForAutoLogin(user: User) async throws {
+        logger.info("Saving user for auto-login: \(user.id)")
+        
+        // User 객체를 UserDTO로 변환
+        let userDTO = UserDTO(
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            profileImageUrl: user.profileImageUrl?.absoluteString,
+            provider: getProviderString(user.provider)
+        )
+        
+        // Keychain에 사용자 데이터 저장
+        keychainDataSource.saveUser(userDTO)
+        
+        // 현재 사용자 정보 메모리에 유지
+        currentUser = user
+    }
+    
+    // 자동 로그인 비활성화
+    func disableAutoLogin() async throws {
+        logger.info("Disabling auto-login")
+        
+        // Keychain에서 사용자 정보 삭제
+        keychainDataSource.deleteUser()
+        
+        // 메모리에는 사용자 정보 유지 (현재 세션 유지)
+        // currentUser는 그대로 유지
+    }
+    
+    // 헬퍼 메서드: User Provider를 문자열로 변환
+    private func getProviderString(_ provider: AuthProvider) -> String {
+        switch provider {
+        case .apple: return "apple"
+        case .google: return "google"
+        case .kakao: return "kakao"
         }
     }
 }

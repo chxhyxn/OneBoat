@@ -11,6 +11,7 @@ import AuthenticationServices
 struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
     @State private var navigateToProfile = false
+    @State private var autoLogin = true  // Default to true for better UX
     
     var body: some View {
         NavigationStack {
@@ -25,7 +26,7 @@ struct LoginView: View {
                 VStack(spacing: 20) {
                     // Apple 로그인 버튼
                     Button {
-                        viewModel.signInWithApple()
+                        viewModel.signInWithApple(enableAutoLogin: autoLogin)
                     } label: {
                         HStack {
                             Image(systemName: "apple.logo")
@@ -42,7 +43,7 @@ struct LoginView: View {
                     
                     // Google 로그인 버튼
                     Button {
-                        viewModel.signInWithGoogle()
+                        viewModel.signInWithGoogle(enableAutoLogin: autoLogin)
                     } label: {
                         HStack {
                             Text("G")
@@ -69,7 +70,7 @@ struct LoginView: View {
                     
                     // 카카오 로그인 버튼
                     Button {
-                        viewModel.signInWithKakao()
+                        viewModel.signInWithKakao(enableAutoLogin: autoLogin)
                     } label: {
                         HStack {
                             Image(systemName: "message.fill")
@@ -85,6 +86,16 @@ struct LoginView: View {
                     }
                 }
                 .padding(.horizontal, 20)
+                
+                // 자동 로그인 체크박스
+                Toggle(isOn: $autoLogin) {
+                    Text("자동 로그인")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .toggleStyle(CheckboxToggleStyle())
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
                 
                 Spacer()
                 
@@ -112,6 +123,22 @@ struct LoginView: View {
                 UserProfileView(viewModel: UserProfileViewModel(authUseCase: DependencyContainer.shared.authUseCase))
                     .navigationBarBackButtonHidden(true)
             }
+        }
+    }
+}
+
+// CheckboxToggleStyle for the auto-login toggle
+struct CheckboxToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+                .foregroundColor(configuration.isOn ? .blue : .gray)
+                .font(.system(size: 20, weight: .bold))
+                .onTapGesture {
+                    configuration.isOn.toggle()
+                }
+            
+            configuration.label
         }
     }
 }

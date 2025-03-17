@@ -63,25 +63,25 @@ class LoginViewModel: ObservableObject {
         }
     }
     
-    func signInWithApple() {
-        signIn {
+    func signInWithApple(enableAutoLogin: Bool = true) {
+        signIn(enableAutoLogin: enableAutoLogin) {
             try await self.authUseCase.signInWithApple()
         }
     }
     
-    func signInWithGoogle() {
-        signIn {
+    func signInWithGoogle(enableAutoLogin: Bool = true) {
+        signIn(enableAutoLogin: enableAutoLogin) {
             try await self.authUseCase.signInWithGoogle()
         }
     }
     
-    func signInWithKakao() {
-        signIn {
+    func signInWithKakao(enableAutoLogin: Bool = true) {
+        signIn(enableAutoLogin: enableAutoLogin) {
             try await self.authUseCase.signInWithKakao()
         }
     }
     
-    private func signIn(authMethod: @escaping () async throws -> User) {
+    private func signIn(enableAutoLogin: Bool, authMethod: @escaping () async throws -> User) {
         Task {
             await MainActor.run {
                 self.isLoading = true
@@ -90,6 +90,17 @@ class LoginViewModel: ObservableObject {
             
             do {
                 let user = try await authMethod()
+                
+                // 자동 로그인 설정에 따라 키체인 저장 여부 결정
+                if enableAutoLogin {
+                    // 유저 정보를 키체인에 저장
+                    try await authUseCase.saveUserForAutoLogin(user: user)
+                    logger.info("User saved for auto-login: \(user.id)")
+                } else {
+                    // 자동 로그인을 원하지 않는 경우, 현재 세션에서만 로그인 상태 유지
+                    logger.info("Auto-login disabled for user: \(user.id)")
+                }
+                
                 await MainActor.run {
                     self.user = user
                     self.isAuthenticated = true

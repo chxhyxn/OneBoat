@@ -13,6 +13,8 @@ protocol AuthUseCase {
     func getCurrentUser() async -> User?
     func loadSavedUser() async -> User?
     func updateUserProfile(userId: String, name: String?, profileImageUrl: String?) async throws
+    func saveUserForAutoLogin(user: User) async throws
+    func disableAutoLogin() async throws
 }
 
 class AuthUseCaseImpl: AuthUseCase {
@@ -48,5 +50,13 @@ class AuthUseCaseImpl: AuthUseCase {
     
     func updateUserProfile(userId: String, name: String?, profileImageUrl: String?) async throws {
         try await authRepository.updateUserProfile(userId: userId, name: name, profileImageUrl: profileImageUrl)
+    }
+    
+    func saveUserForAutoLogin(user: User) async throws {
+        try await authRepository.saveUserForAutoLogin(user: user)
+    }
+    
+    func disableAutoLogin() async throws {
+        try await authRepository.disableAutoLogin()
     }
 }

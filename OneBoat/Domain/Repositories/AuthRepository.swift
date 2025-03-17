@@ -17,4 +17,8 @@ protocol AuthRepository {
     
     // Firestore 관련 기능 추가
     func updateUserProfile(userId: String, name: String?, profileImageUrl: String?) async throws
+    
+    // 자동 로그인 관련 기능
+    func saveUserForAutoLogin(user: User) async throws
+    func disableAutoLogin() async throws
 }

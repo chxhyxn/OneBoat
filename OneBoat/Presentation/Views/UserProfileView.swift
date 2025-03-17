@@ -11,6 +11,8 @@ struct UserProfileView: View {
     @ObservedObject var viewModel: UserProfileViewModel
     @Environment(\.presentationMode) var presentationMode
     @State private var navigateToLogin = false
+    @State private var showingLogoutAlert = false
+    @State private var keepAutoLogin = false
     
     var body: some View {
         NavigationStack {
@@ -70,9 +72,7 @@ struct UserProfileView: View {
                     
                     // 로그아웃 버튼
                     Button {
-                        viewModel.signOut {
-                            navigateToLogin = true
-                        }
+                        showingLogoutAlert = true
                     } label: {
                         Text("로그아웃")
                             .font(.headline)
@@ -84,6 +84,18 @@ struct UserProfileView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 40)
+                    .alert("로그아웃", isPresented: $showingLogoutAlert) {
+                        Button("취소", role: .cancel) { }
+                        
+                        Button("로그아웃", role: .destructive) {
+                            viewModel.signOut {
+                                navigateToLogin = true
+                            }
+                        }
+                    } message: {
+                        Text("로그아웃 하시겠습니까?")
+                    }
+                    
                 } else {
                     Text("사용자 정보를 불러올 수 없습니다")
                         .foregroundColor(.red)

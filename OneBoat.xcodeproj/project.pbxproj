@@ -41,22 +41,9 @@
 		B96677992D882B600043977B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B96677982D882B1E0043977B /* Exceptions for "OneBoat" folder in "OneBoat" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = B96677292D882AA70043977B /* OneBoat */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B966772C2D882AA70043977B /* OneBoat */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				B96677982D882B1E0043977B /* Exceptions for "OneBoat" folder in "OneBoat" target */,
-			);
 			path = OneBoat;
 			sourceTree = "<group>";
 		};

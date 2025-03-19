@@ -66,6 +66,8 @@ class UserProfileViewModel: ObservableObject {
         }
         
         do {
+            try await authUseCase.saveUserToFirestore(user: user)
+            
             try await authUseCase.updateUserProfile(
                 userId: user.id,
                 name: name,

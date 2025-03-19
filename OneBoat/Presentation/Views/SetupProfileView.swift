@@ -92,14 +92,13 @@ struct SetupProfileView: View {
             await viewModel.updateProfile(name: name)
             
             if viewModel.errorMessage == nil {
-                // 이름 업데이트 성공 후 사용자를 Firestore에 저장
+                // 이름 업데이트 성공 후 완전한 사용자 정보를 저장
                 do {
                     let authUseCase = DependencyContainer.shared.authUseCase
                     
-                    // AuthRepository 구현체에 접근
-                    if let authRepo = Mirror(reflecting: authUseCase).children.first(where: { $0.label == "authRepository" })?.value as? AuthRepositoryImpl,
-                       let updatedUser = await authUseCase.getCurrentUser() {
-                        try await authRepo.saveUserToFirestore(user: updatedUser)
+                    if let updatedUser = await authUseCase.getCurrentUser() {
+                        // 사용자 정보를 Firestore와 키체인에 저장 (자동 로그인은 기본값 true)
+                        try await authUseCase.saveUserComplete(user: updatedUser, enableAutoLogin: true)
                     }
                     
                     navigateToProfile = true

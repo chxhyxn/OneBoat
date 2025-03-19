@@ -15,6 +15,8 @@ class AuthRepositoryImpl: AuthRepository {
     private let keychainDataSource: KeychainDataSource
     private let firestoreDataSource: UserFirestoreDataSource
     private var currentUser: User?
+    private var currentUserDTO: UserDTO?
+    
     private let logger = Logger(subsystem: "com.yourapp.LearnLogin", category: "AuthRepository")
     
     init(
@@ -35,6 +37,7 @@ class AuthRepositoryImpl: AuthRepository {
         logger.info("Signing in with Apple")
         
         let userDTO = try await appleAuthDataSource.signIn()
+        currentUserDTO = userDTO
         
         if let existingUserDTO = try await firestoreDataSource.getUser(id: userDTO.id) {
             logger.info("User already exists in Firestore: \(userDTO.id)")
@@ -43,11 +46,12 @@ class AuthRepositoryImpl: AuthRepository {
             
             let user = existingUserDTO.toDomain()
             currentUser = user
+            
+            // 기존 사용자는 자동 로그인을 위해 키체인에 저장
+            keychainDataSource.saveUser(existingUserDTO)
+            
             return (user, false)
         }
-        
-        // 신규 사용자인 경우 Firestore에 저장하지 않고 메모리에만 유지
-        logger.info("New user, not saving to Firestore yet: \(userDTO.id)")
         
         let user = userDTO.toDomain()
         currentUser = user
@@ -57,6 +61,7 @@ class AuthRepositoryImpl: AuthRepository {
     func signInWithGoogle() async throws -> (User, Bool) {
         logger.info("Signing in with Google")
         let userDTO = try await googleAuthDataSource.signIn()
+        currentUserDTO = userDTO
         
         if let existingUserDTO = try await firestoreDataSource.getUser(id: userDTO.id) {
             logger.info("User already exists in Firestore: \(userDTO.id)")
@@ -65,6 +70,9 @@ class AuthRepositoryImpl: AuthRepository {
             
             let user = existingUserDTO.toDomain()
             currentUser = user
+            
+            keychainDataSource.saveUser(existingUserDTO)
+
             return (user, false)
         }
         
@@ -78,6 +86,7 @@ class AuthRepositoryImpl: AuthRepository {
     func signInWithKakao() async throws -> (User, Bool) {
         logger.info("Signing in with Kakao")
         let userDTO = try await kakaoAuthDataSource.signIn()
+        currentUserDTO = userDTO
         
         if let existingUserDTO = try await firestoreDataSource.getUser(id: userDTO.id) {
             logger.info("User already exists in Firestore: \(userDTO.id)")
@@ -86,6 +95,9 @@ class AuthRepositoryImpl: AuthRepository {
             
             let user = existingUserDTO.toDomain()
             currentUser = user
+            
+            keychainDataSource.saveUser(existingUserDTO)
+            
             return (user, false)
         }
                 
@@ -198,11 +210,16 @@ class AuthRepositoryImpl: AuthRepository {
             provider: getProviderString(user.provider)
         )
         
-        // Keychain에 사용자 데이터 저장
-        keychainDataSource.saveUser(userDTO)
-        
-        // 현재 사용자 정보 메모리에 유지
-        currentUser = user
+        if let existingUserDTO = try await firestoreDataSource.getUser(id: userDTO.id) {
+            logger.info("User already exists in Firestore: \(userDTO.id)")
+            
+            try await firestoreDataSource.updateUserInfo(id: userDTO.id, additionalInfo: ["lastLogin": Timestamp()])
+            
+            let user = existingUserDTO.toDomain()
+            currentUser = user
+            
+            keychainDataSource.saveUser(existingUserDTO)
+        }
     }
     
     // 자동 로그인 비활성화
@@ -239,5 +256,30 @@ class AuthRepositoryImpl: AuthRepository {
         
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
+    }
+    
+    func saveUserComplete(user: User, enableAutoLogin: Bool) async throws {
+        logger.info("Saving complete user data for: \(user.id)")
+        
+        // User 객체를 UserDTO로 변환
+        let userDTO = UserDTO(
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            profileImageUrl: user.profileImageUrl?.absoluteString,
+            provider: getProviderString(user.provider)
+        )
+        
+        // Firestore에 사용자 데이터 저장
+        try await firestoreDataSource.saveUser(userDTO)
+        
+        // 자동 로그인이 활성화된 경우에만 키체인에 저장
+        if enableAutoLogin {
+            logger.info("Auto-login enabled, saving to keychain")
+            keychainDataSource.saveUser(userDTO)
+        }
+        
+        // 현재 사용자 정보 업데이트
+        currentUser = user
     }
 }

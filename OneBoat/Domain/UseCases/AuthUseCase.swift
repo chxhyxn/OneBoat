@@ -6,9 +6,9 @@
 //
 
 protocol AuthUseCase {
-    func signInWithApple() async throws -> User
-    func signInWithGoogle() async throws -> User
-    func signInWithKakao() async throws -> User
+    func signInWithApple() async throws -> (User, Bool)
+    func signInWithGoogle() async throws -> (User, Bool)
+    func signInWithKakao() async throws -> (User, Bool)
     func signOut() async throws
     func getCurrentUser() async -> User?
     func loadSavedUser() async -> User?
@@ -24,15 +24,15 @@ class AuthUseCaseImpl: AuthUseCase {
         self.authRepository = authRepository
     }
     
-    func signInWithApple() async throws -> User {
+    func signInWithApple() async throws -> (User, Bool) {
         return try await authRepository.signInWithApple()
     }
     
-    func signInWithGoogle() async throws -> User {
+    func signInWithGoogle() async throws -> (User, Bool) {
         return try await authRepository.signInWithGoogle()
     }
     
-    func signInWithKakao() async throws -> User {
+    func signInWithKakao() async throws -> (User, Bool) {
         return try await authRepository.signInWithKakao()
     }
     

@@ -30,40 +30,60 @@ class AuthRepositoryImpl: AuthRepository {
         self.firestoreDataSource = firestoreDataSource
     }
     
-    func signInWithApple() async throws -> User {
+    func signInWithApple() async throws -> (User, Bool) {
         logger.info("Signing in with Apple")
         let userDTO = try await appleAuthDataSource.signIn()
         
+        // Check if user exists in Firestore
+        let isNewUser = await checkIfNewUser(id: userDTO.id)
+        
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
         
         let user = userDTO.toDomain()
         currentUser = user
-        return user
+        return (user, isNewUser)
     }
-    
-    func signInWithGoogle() async throws -> User {
+
+    func signInWithGoogle() async throws -> (User, Bool) {
         logger.info("Signing in with Google")
         let userDTO = try await googleAuthDataSource.signIn()
         
+        // Check if user exists in Firestore
+        let isNewUser = await checkIfNewUser(id: userDTO.id)
+        
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
         
         let user = userDTO.toDomain()
         currentUser = user
-        return user
+        return (user, isNewUser)
     }
-    
-    func signInWithKakao() async throws -> User {
+
+    func signInWithKakao() async throws -> (User, Bool) {
         logger.info("Signing in with Kakao")
         let userDTO = try await kakaoAuthDataSource.signIn()
         
+        // Check if user exists in Firestore
+        let isNewUser = await checkIfNewUser(id: userDTO.id)
+        
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
         
         let user = userDTO.toDomain()
         currentUser = user
-        return user
+        return (user, isNewUser)
+    }
+
+    // Helper method to check if user is new
+    private func checkIfNewUser(id: String) async -> Bool {
+        do {
+            let existingUser = try await firestoreDataSource.getUser(id: id)
+            return existingUser == nil
+        } catch {
+            logger.error("Error checking if user exists: \(error.localizedDescription)")
+            return true // Default to true if we can't determine
+        }
     }
     
     func signOut() async throws {

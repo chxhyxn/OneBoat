@@ -17,6 +17,7 @@ class LoginViewModel: ObservableObject {
     @Published var error: String?
     @Published var user: User?
     @Published var isAuthenticated = false
+    @Published var isNewUser = false
     
     init(authUseCase: AuthUseCase) {
         self.authUseCase = authUseCase
@@ -81,7 +82,7 @@ class LoginViewModel: ObservableObject {
         }
     }
     
-    private func signIn(enableAutoLogin: Bool, authMethod: @escaping () async throws -> User) {
+    private func signIn(enableAutoLogin: Bool, authMethod: @escaping () async throws -> (User, Bool)) {
         Task {
             await MainActor.run {
                 self.isLoading = true
@@ -89,7 +90,7 @@ class LoginViewModel: ObservableObject {
             }
             
             do {
-                let user = try await authMethod()
+                let (user, isNewUser) = try await authMethod()
                 
                 // 자동 로그인 설정에 따라 키체인 저장 여부 결정
                 if enableAutoLogin {
@@ -103,6 +104,7 @@ class LoginViewModel: ObservableObject {
                 
                 await MainActor.run {
                     self.user = user
+                    self.isNewUser = isNewUser
                     self.isAuthenticated = true
                     self.isLoading = false
                 }

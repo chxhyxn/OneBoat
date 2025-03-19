@@ -8,9 +8,9 @@
 import SwiftUI
 
 protocol AuthRepository {
-    func signInWithApple() async throws -> User
-    func signInWithGoogle() async throws -> User
-    func signInWithKakao() async throws -> User
+    func signInWithApple() async throws -> (User, Bool) // Returns (user, isNewUser)
+    func signInWithGoogle() async throws -> (User, Bool)
+    func signInWithKakao() async throws -> (User, Bool)
     func signOut() async throws
     func getCurrentUser() async -> User?
     func loadSavedUser() async -> User?

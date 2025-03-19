@@ -11,6 +11,7 @@ import AuthenticationServices
 struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
     @State private var navigateToProfile = false
+    @State private var navigateToSetupProfile = false
     @State private var autoLogin = true  // Default to true for better UX
     
     var body: some View {
@@ -115,12 +116,18 @@ struct LoginView: View {
                 await viewModel.checkCurrentUser()
             }
             .onChange(of: viewModel.isAuthenticated) { newValue in
-                if newValue {
+                if viewModel.isNewUser {
+                    navigateToSetupProfile = true
+                } else {
                     navigateToProfile = true
                 }
             }
             .navigationDestination(isPresented: $navigateToProfile) {
                 UserProfileView(viewModel: UserProfileViewModel(authUseCase: DependencyContainer.shared.authUseCase))
+                    .navigationBarBackButtonHidden(true)
+            }
+            .navigationDestination(isPresented: $navigateToSetupProfile) {
+                SetupProfileView(viewModel: UserProfileViewModel(authUseCase: DependencyContainer.shared.authUseCase))
                     .navigationBarBackButtonHidden(true)
             }
         }

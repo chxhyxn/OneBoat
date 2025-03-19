@@ -88,11 +88,25 @@ struct SetupProfileView: View {
         Task {
             guard let user = viewModel.user else { return }
             
+            // 먼저 이름 업데이트
             await viewModel.updateProfile(name: name)
             
-            // Navigate to profile after updating name
             if viewModel.errorMessage == nil {
-                navigateToProfile = true
+                // 이름 업데이트 성공 후 사용자를 Firestore에 저장
+                do {
+                    let authUseCase = DependencyContainer.shared.authUseCase
+                    
+                    // AuthRepository 구현체에 접근
+                    if let authRepo = Mirror(reflecting: authUseCase).children.first(where: { $0.label == "authRepository" })?.value as? AuthRepositoryImpl,
+                       let updatedUser = await authUseCase.getCurrentUser() {
+                        try await authRepo.saveUserToFirestore(user: updatedUser)
+                    }
+                    
+                    navigateToProfile = true
+                } catch {
+                    // 에러 처리
+                    viewModel.errorMessage = "사용자 정보 저장 실패: \(error.localizedDescription)"
+                }
             }
         }
     }

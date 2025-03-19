@@ -21,4 +21,5 @@ protocol AuthRepository {
     // 자동 로그인 관련 기능
     func saveUserForAutoLogin(user: User) async throws
     func disableAutoLogin() async throws
+    func saveUserToFirestore(user: User) async throws
 }

@@ -15,6 +15,7 @@ protocol AuthUseCase {
     func updateUserProfile(userId: String, name: String?, profileImageUrl: String?) async throws
     func saveUserForAutoLogin(user: User) async throws
     func disableAutoLogin() async throws
+    func saveUserToFirestore(user: User) async throws
 }
 
 class AuthUseCaseImpl: AuthUseCase {
@@ -58,5 +59,9 @@ class AuthUseCaseImpl: AuthUseCase {
     
     func disableAutoLogin() async throws {
         try await authRepository.disableAutoLogin()
+    }
+    
+    func saveUserToFirestore(user: User) async throws {
+        try await authRepository.saveUserToFirestore(user: user)
     }
 }

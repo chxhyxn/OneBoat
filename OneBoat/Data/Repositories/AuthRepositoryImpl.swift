@@ -46,8 +46,8 @@ class AuthRepositoryImpl: AuthRepository {
             return (user, false)
         }
         
-        logger.info("New user, saving to Firestore: \(userDTO.id)")
-        try await firestoreDataSource.saveUser(userDTO)
+        // 신규 사용자인 경우 Firestore에 저장하지 않고 메모리에만 유지
+        logger.info("New user, not saving to Firestore yet: \(userDTO.id)")
         
         let user = userDTO.toDomain()
         currentUser = user
@@ -69,7 +69,6 @@ class AuthRepositoryImpl: AuthRepository {
         }
         
         // Firestore에 사용자 데이터 저장
-        try await firestoreDataSource.saveUser(userDTO)
         
         let user = userDTO.toDomain()
         currentUser = user
@@ -89,10 +88,7 @@ class AuthRepositoryImpl: AuthRepository {
             currentUser = user
             return (user, false)
         }
-        
-        // Firestore에 사용자 데이터 저장
-        try await firestoreDataSource.saveUser(userDTO)
-        
+                
         let user = userDTO.toDomain()
         currentUser = user
         return (user, true)
@@ -227,5 +223,21 @@ class AuthRepositoryImpl: AuthRepository {
         case .google: return "google"
         case .kakao: return "kakao"
         }
+    }
+    
+    func saveUserToFirestore(user: User) async throws {
+        logger.info("Saving new user to Firestore: \(user.id)")
+        
+        // User 객체를 UserDTO로 변환
+        let userDTO = UserDTO(
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            profileImageUrl: user.profileImageUrl?.absoluteString,
+            provider: getProviderString(user.provider)
+        )
+        
+        // Firestore에 사용자 데이터 저장
+        try await firestoreDataSource.saveUser(userDTO)
     }
 }

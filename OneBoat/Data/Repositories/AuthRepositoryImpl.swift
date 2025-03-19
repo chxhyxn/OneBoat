@@ -6,6 +6,7 @@
 //
 
 import OSLog
+import FirebaseCore
 
 class AuthRepositoryImpl: AuthRepository {
     private let appleAuthDataSource: AppleAuthDataSource
@@ -32,58 +33,69 @@ class AuthRepositoryImpl: AuthRepository {
     
     func signInWithApple() async throws -> (User, Bool) {
         logger.info("Signing in with Apple")
+        
         let userDTO = try await appleAuthDataSource.signIn()
         
-        // Check if user exists in Firestore
-        let isNewUser = await checkIfNewUser(id: userDTO.id)
+        if let existingUserDTO = try await firestoreDataSource.getUser(id: userDTO.id) {
+            logger.info("User already exists in Firestore: \(userDTO.id)")
+            
+            try await firestoreDataSource.updateUserInfo(id: userDTO.id, additionalInfo: ["lastLogin": Timestamp()])
+            
+            let user = existingUserDTO.toDomain()
+            currentUser = user
+            return (user, false)
+        }
         
-        // Firestore에 사용자 데이터 저장
+        logger.info("New user, saving to Firestore: \(userDTO.id)")
         try await firestoreDataSource.saveUser(userDTO)
         
         let user = userDTO.toDomain()
         currentUser = user
-        return (user, isNewUser)
+        return (user, true)
     }
 
     func signInWithGoogle() async throws -> (User, Bool) {
         logger.info("Signing in with Google")
         let userDTO = try await googleAuthDataSource.signIn()
         
-        // Check if user exists in Firestore
-        let isNewUser = await checkIfNewUser(id: userDTO.id)
+        if let existingUserDTO = try await firestoreDataSource.getUser(id: userDTO.id) {
+            logger.info("User already exists in Firestore: \(userDTO.id)")
+            
+            try await firestoreDataSource.updateUserInfo(id: userDTO.id, additionalInfo: ["lastLogin": Timestamp()])
+            
+            let user = existingUserDTO.toDomain()
+            currentUser = user
+            return (user, false)
+        }
         
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
         
         let user = userDTO.toDomain()
         currentUser = user
-        return (user, isNewUser)
+        return (user, true)
     }
 
     func signInWithKakao() async throws -> (User, Bool) {
         logger.info("Signing in with Kakao")
         let userDTO = try await kakaoAuthDataSource.signIn()
         
-        // Check if user exists in Firestore
-        let isNewUser = await checkIfNewUser(id: userDTO.id)
+        if let existingUserDTO = try await firestoreDataSource.getUser(id: userDTO.id) {
+            logger.info("User already exists in Firestore: \(userDTO.id)")
+            
+            try await firestoreDataSource.updateUserInfo(id: userDTO.id, additionalInfo: ["lastLogin": Timestamp()])
+            
+            let user = existingUserDTO.toDomain()
+            currentUser = user
+            return (user, false)
+        }
         
         // Firestore에 사용자 데이터 저장
         try await firestoreDataSource.saveUser(userDTO)
         
         let user = userDTO.toDomain()
         currentUser = user
-        return (user, isNewUser)
-    }
-
-    // Helper method to check if user is new
-    private func checkIfNewUser(id: String) async -> Bool {
-        do {
-            let existingUser = try await firestoreDataSource.getUser(id: id)
-            return existingUser == nil
-        } catch {
-            logger.error("Error checking if user exists: \(error.localizedDescription)")
-            return true // Default to true if we can't determine
-        }
+        return (user, true)
     }
     
     func signOut() async throws {
